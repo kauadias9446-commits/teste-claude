@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="320" viewBox="0 0 520 320">
+  <rect width="520" height="320" rx="24" fill="#0b0b0b" />
+  <g fill="#C59D5F" opacity="0.12">
+    <circle cx="80" cy="80" r="28" />
+    <circle cx="160" cy="120" r="20" />
+    <rect x="240" y="60" width="140" height="16" rx="8" />
+  </g>
+  <text x="30" y="260" fill="#94a3b8" font-size="12">Preview do Dashboard — mock</text>
+</svg>
