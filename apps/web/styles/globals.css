@@ -3,13 +3,31 @@
 @tailwind utilities;
 
 :root{
-  --bg:#0f1724; /* dark neutral */
-  --muted:#94a3b8;
-  --accent:#06b6d4; /* cyan accent */
+  --bg: #000000; /* brand black */
+  --muted: #94a3b8;
+  --accent: #C59D5F; /* brand gold */
+  --card-bg: #0b0b0b;
+  --glass: rgba(255,255,255,0.04);
 }
 
 html,body,#root{height:100%;}
 body{
-  @apply bg-[color:var(--bg)] text-white antialiased;
+  background-color: var(--bg);
+  color: white;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
+
+/* Utility for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Simple helpers */
+.text-muted { color: #94a3b8; }
+
