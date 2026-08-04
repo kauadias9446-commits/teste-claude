@@ -11,8 +11,11 @@ async function main(){
     }
   })
 
-  await prisma.plan.create({
-    data: {
+  await prisma.plan.upsert({
+    where: { id: 'seed-plan-1' },
+    update: {},
+    create: {
+      id: 'seed-plan-1',
       userId: user.id,
       title: 'Primeiros passos para evolução',
       progress: 24

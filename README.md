@@ -1,52 +1,41 @@
 # Dias K — MVP (GitHub Edition)
 
-A premium MVP for Dias K: AI for continuous personal evolution.
+## Configuração (Auth + Database)
 
-This repository contains a Next.js + TypeScript starter focused on a cinematic marketing landing and an interactive demo (dashboard + chat). The scaffold emphasizes performance, accessibility, modular architecture, and readiness for IA integration.
+Para rodar localmente com autenticação e banco de dados, siga estes passos:
 
-Quickstart (development)
+1) Crie um arquivo de ambiente em apps/web/.env.local copiando o exemplo:
 
-Requirements
-- Node.js 18+ (recommended)
-- pnpm (recommended) or npm/yarn
+   cp .env.example apps/web/.env.local
 
-Install
+2) Preencha as variáveis obrigatórias no .env.local ou nas Environment Variables do Vercel:
 
-```bash
-# from repo root
-cd apps/web
-pnpm install
-pnpm prisma:generate
-pnpm dev
-```
+   - DATABASE_URL (postgresql://user:password@host:port/dbname)
+   - NEXTAUTH_URL (ex.: http://localhost:3000)
+   - NEXTAUTH_SECRET (uma string forte)
+   - GITHUB_CLIENT_ID
+   - GITHUB_CLIENT_SECRET
+   - EMAIL_SERVER (ex.: smtp://user:pass@smtp.provider:587)
+   - EMAIL_FROM (ex.: "Dias K <no-reply@your-domain.com>")
+   - OPENAI_API_KEY (para integração de IA)
 
-Environment
-Copy .env.example to .env.local and fill the values.
+3) Instale dependências e gere o cliente Prisma:
 
-Scripts (apps/web)
-- pnpm dev — run development server
-- pnpm build — production build
-- pnpm start — start built app
-- pnpm lint — run ESLint
-- pnpm prisma:migrate — run Prisma migrations
-- pnpm prisma:generate — generate Prisma client
-- pnpm seed — run seed script
+   cd apps/web
+   pnpm install
+   pnpm prisma:generate
 
-Design & Tech
-- Next.js (App Router)
-- React + TypeScript
-- Tailwind CSS
-- Prisma + PostgreSQL
-- NextAuth (auth scaffold)
-- Framer Motion (animations)
+4) Rode as migrations locais e o seed:
 
-Structure (high level)
-- apps/web — Next.js application (marketing + protected app)
-- prisma — schema and seed
-- .github — CI workflows
+   pnpm prisma:migrate dev --name nextauth
+   pnpm seed
 
-License
-MIT
+5) Rode o servidor de desenvolvimento:
 
-Contributing
-See CONTRIBUTING.md (coming soon).
+   pnpm dev
+
+
+## Observações
+- As migrations serão geradas na branch feat/auth-prisma. Se você preferir revisar antes de rodá-las, fique à vontade para abrir o PR e executar as migrações localmente.
+- Para deploy em Vercel, adicione as mesmas variáveis de ambiente no painel do projeto (Settings → Environment Variables).
+
