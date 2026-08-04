@@ -1,0 +1,67 @@
+// Prisma schema (initial)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  createdAt DateTime @default(now())
+  profiles  Profile[]
+  memories  Memory[]
+  plans     Plan[]
+  sessions  Conversation[]
+}
+
+model Profile {
+  id       String @id @default(cuid())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  locale   String?
+  timezone String?
+}
+
+model Memory {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      String?
+  content   String
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model Plan {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  title     String
+  progress  Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  title     String?
+  messages  Message[]
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  role           String
+  content        String
+  createdAt      DateTime @default(now())
+}
