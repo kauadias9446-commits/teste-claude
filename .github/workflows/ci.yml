@@ -1,29 +1,72 @@
-name: CI
+name: CI / Build
+
 on:
   pull_request:
+    branches: [ main ]
   push:
     branches: [ main ]
+  workflow_dispatch: {}
 
 jobs:
   build:
+    name: Build (check)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node
+
+      - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'pnpm'
+
       - name: Install pnpm
         run: npm install -g pnpm
+
       - name: Install dependencies
-        run: |
-          cd apps/web
-          pnpm install
-      - name: Typecheck
-        run: |
-          cd apps/web
-          pnpm prisma:generate || true
+        run: pnpm install
+        working-directory: ./apps/web
+
+      - name: Generate Prisma client
+        run: pnpm prisma:generate || npx prisma generate
+        working-directory: ./apps/web
+
       - name: Build
+        run: pnpm build || npm run build
+        working-directory: ./apps/web
+
+  # Manual migration job: run via workflow_dispatch if you want to apply migrations from the UI.
+  apply_migrations:
+    name: Apply Prisma Migrations (manual)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: ./apps/web
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           cd apps/web
-          pnpm build
+          npx prisma migrate deploy
+
+      - name: Optional: run seed
+        if: env.RUN_SEED == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          cd apps/web
+          node prisma/seed.js || npx ts-node prisma/seed.ts
