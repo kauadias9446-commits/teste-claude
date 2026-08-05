@@ -134,3 +134,14 @@ Observações
 • Optei por abrir o PR “Ready for review”. Se preferir criar como Draft, adicione –draft ao comando.
 
 • Merge strategy recomendado: squash (pode ser escolhido no momento do merge).
+
+
+1. PR Draft — auth + prismagh pr create –base main –head feat/auth-prisma –title “feat(auth+prisma): NextAuth + Prisma” –body $‘Scaffold de autenticação com NextAuth e adapter Prisma.\n\nO que inclui:\n- Modelos Prisma (User, Account, Session, VerificationToken) e modelos de app\n- prisma/seed.ts (usuário demo + seed de plano)\n- pages/api/auth/[…nextauth].ts (NextAuth)\n- middleware e helper de sessão\n\nChecklist:\n- [ ] Adicionar secrets (DATABASE_URL, NEXTAUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, EMAIL_SERVER, EMAIL_FROM)\n- [ ] Rodar migrações / seed localmente ou via Actions\n\nInstruções de teste: ver apps/web/READY_FOR_DEPLOY.md’ –draft –label “feature/auth” –reviewer kauadias9446-commits
+
+Compare URL (web):https://github.com/kauadias9446-commits/teste-claude/compare/main…feat/auth-prisma
+
+2. PR Draft — API IAgh pr create –base main –head feat/api-ia –title “feat(api): add /api/ai proxy to OpenAI” –body $‘Endpoint server-side /api/ai que proxya para OpenAI.\n\nO que inclui:\n- apps/web/pages/api/ai/index.ts (validação, rate-limit in-memory, exige sessão)\n- apps/web/lib/server/rateLimit.ts\n\nChecklist:\n- [ ] Adicionar OPENAI_API_KEY em Secrets\n- [ ] Revisar limites e trocar rate limiter por Redis em produção\n\nExemplo curl no README.’ –draft –label “feature/api” –reviewer kauadias9446-commits
+
+Compare URL (web):https://github.com/kauadias9446-commits/teste-claude/compare/main…feat/api-ia
+
+3. PR Draft — CI / prepare-deploy (opcional)gh pr create –base main –head chore/prepare-deploy –title “chore(ci): add CI workflow and deploy guide” –body $‘Adiciona workflow CI (build) e job manual para aplicar migrações via workflow_dispatch.\n\nChecklist:\n- [ ] Adicionar DATABASE_URL em GitHub Secrets (ou usar Vercel envs)\n- [ ] Executar Apply Prisma Migrations manualmente via Actions após merge’ –draft –label “chore/ci” –reviewer kauadias9446-commits
